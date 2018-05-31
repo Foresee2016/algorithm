@@ -14,8 +14,9 @@ public class DemoSimple {
 		graph.addVertex(v3, v2,v4);
 		graph.addVertex(v4, v2,v5,v3);
 		graph.addVertex(v5, v4,v1,v2);
-		graph.broadFirstSearch(v1);
-		graph.printPath(v1, v4);
+		//graph.broadFirstSearch(v1);
+		//graph.printPath(v1, v4);
+		System.out.println(graph.diameter());
 	}
 
 }
