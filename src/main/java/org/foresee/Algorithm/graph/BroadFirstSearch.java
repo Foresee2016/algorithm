@@ -22,13 +22,13 @@ public class BroadFirstSearch {
 		s.d=0;
 		s.p=null;
 		Queue<Vertex> Q=new LinkedList<>(); //使用队列管理灰色节点
-		System.out.println("入队："+s.num+", 深度："+s.d);
+		System.out.println("入队："+s.name+", 深度："+s.d);
 		if(!Q.offer(s)){ //源节点入队，从这里开始
 			System.out.println("队列已满");
 		}
 		while(Q.size()!=0){
 			Vertex u=Q.poll(); 
-			System.out.println("出队："+u.num);
+			System.out.println("出队："+u.name);
 			// 考察该节点的所有邻接节点，如果是白色的，则它还没被发现，涂灰色表示已发现，设置距离和父节点，加入队列末尾
 			for (Vertex v : graph.adjoin.get(u.pos)) {
 				if(v.color==Color.white){
@@ -38,12 +38,12 @@ public class BroadFirstSearch {
 					if(!Q.offer(v)){
 						System.out.println("队列已满");
 					}
-					System.out.println("染灰："+v.num+", 深度："+v.d+"，前驱："+v.p.num+", 入队"+v.num);
+					System.out.println("染灰："+v.name+", 深度："+v.d+"，前驱："+v.p.name+", 入队"+v.name);
 				}
 			}
 			// 该节点已经考察完邻接节点，涂黑色，表示它的邻接节点都已被发现了
 			u.color=Color.black;
-			System.out.println("涂黑："+u.num);
+			System.out.println("涂黑："+u.name);
 		}
 	}
 	
@@ -52,12 +52,12 @@ public class BroadFirstSearch {
 	 */
 	public void printPath(Vertex s, Vertex v) {
 		if(v==s){
-			System.out.print(s.num);
+			System.out.print(s.name);
 		}else if(v.p==null) {
-			System.out.println("No Path from "+s.num+" to "+v.num);
+			System.out.println("No Path from "+s.name+" to "+v.name);
 		}else {
 			printPath(s, v.p);
-			System.out.print("-"+v.num);
+			System.out.print("-"+v.name);
 		}
 	}
 	/**

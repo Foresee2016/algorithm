@@ -8,13 +8,13 @@ package org.foresee.Algorithm.graph;
  */
 public class Vertex {
 	// 这个节点的标识符
-	public int num;
-	public int pos=-1;
-	public Color color;	
+	public String name; // 结点的名字，1,2,3，书里多用u，v，x等
+	public int pos=-1; // 在addVertex到Graph时记录该Vertex在List中位置，方便之后取它的adjoint
+	public Color color;	// 颜色，标志访问状态
 	public int d;	//广度优先遍历时使用，从源节点s到这个节点的距离，深度优先遍历时存图灰色时间戳
 	public Vertex p;	//广度优先遍历时使用，前驱节点
 	public int f;	//深度优先遍历时存涂黑色时间戳
-	public Vertex(int num) {
-		this.num=num;
+	public Vertex(String name) {
+		this.name=name;
 	}
 }
