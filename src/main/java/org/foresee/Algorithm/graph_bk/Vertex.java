@@ -1,4 +1,4 @@
-package org.foresee.Algorithm.graph;
+package org.foresee.Algorithm.graph_bk;
 
 /**
  * 用来表示图的定点，如果结点需要附带属性，可以继承它，在子类中加成员变量表示该属性

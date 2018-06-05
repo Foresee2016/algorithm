@@ -1,4 +1,4 @@
-package org.foresee.Algorithm.graph;
+package org.foresee.Algorithm.graph_bk;
 
 public class DemoGraph2 {
 	public static void main(String[] args) {

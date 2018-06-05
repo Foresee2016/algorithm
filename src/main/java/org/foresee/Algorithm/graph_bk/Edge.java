@@ -1,4 +1,4 @@
-package org.foresee.Algorithm.graph;
+package org.foresee.Algorithm.graph_bk;
 
 public enum Edge {
 	TreeEdge, // 树边，为深度优先森林Gp中的边，如果结点v是因算法对边（u，v）的探索而被发现，则（u，v）是一条树边

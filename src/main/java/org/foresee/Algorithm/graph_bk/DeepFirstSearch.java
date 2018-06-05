@@ -1,4 +1,4 @@
-package org.foresee.Algorithm.graph;
+package org.foresee.Algorithm.graph_bk;
 
 import java.util.LinkedList;
 import java.util.Stack;
@@ -60,7 +60,7 @@ public class DeepFirstSearch {
 		for (LinkedList<Vertex> list : graph.adjoin) {
 			Vertex u = list.get(0);
 			if (u.color == Color.white) {
-				deepFirstSearchVisit3(graph, u);
+				deepFirstSearchVisit4(graph, u);
 			}
 		}
 	}
@@ -92,8 +92,7 @@ public class DeepFirstSearch {
 					break; // 已发现新推入的结点，继续遍历该节点
 				}
 				// 这里link.color==Color.gray时，是后向边。NOTE：自循环的边如x出去的边指向x自己，也视为后向边
-				// 而link.color==Color.black时，是横向边
-				// 而link.color==Color.black时，一个节点被两条路径访问到，第二次访问是前向边
+				// 而link.color==Color.black时，是横向边或前向边，判断v.d和link.d大小区分，参见deepFirstSearchVisit4()
 			}
 			if (pushedNew == false) { // 如果没push新的，说明已处于回退涂黑阶段，涂黑并pop
 				time++;
@@ -134,9 +133,57 @@ public class DeepFirstSearch {
 					pushedNew = true;
 					break; // 已发现新推入的结点，继续遍历该节点
 				}
-				// 这里link.color==Color.gray时，是后向边。NOTE：自循环的边如x出去的边指向x自己，也视为后向边
-				// 而link.color==Color.black时，是横向边
-				// 而link.color==Color.black时，一个节点被两条路径访问到，第二次访问是前向边
+			}
+			if (pushedNew == false) { // 如果没push新的，说明已处于回退涂黑阶段，涂黑并pop
+				time++;
+				v.f = time;
+				v.color = Color.black;
+				stack.pop();
+				curPos.pop();
+				System.out.println("涂黑" + v.name + ", f = " + v.f);
+			}
+		}
+	}
+	/**
+	 * 课后练习23.3-10，要求打印每条边的分类。书里已解释了，使用颜色区分，前向边和横向边用if(u.d<v.d)区分
+	 */
+	public void deepFirstSearchVisit4(Graph graph, Vertex u) {
+		Stack<Vertex> stack = new Stack<>();
+		Stack<Integer> curPos=new Stack<>();
+		time++;
+		u.d=time; //赋初始u条件，压入
+		u.color=Color.gray;
+		System.out.println("涂灰" + u.name+", d = "+u.d);
+		stack.push(u); 
+		curPos.push(0);
+		while (!stack.isEmpty()) { // stack为空，则该条线上所有节点都访问到了
+			Vertex v = stack.peek();
+			LinkedList<Vertex> links = graph.adjoin.get(v.pos);
+			boolean pushedNew = false;
+			for (int i=curPos.peek(); i<links.size(); i++) { 
+				Vertex link = links.get(i);
+				if (link.color == Color.white) { // 新访问到时，push
+					time++;
+					link.d = time;	
+					link.color = Color.gray;
+					link.p=v; // 此时产生树边
+					System.out.println("涂灰" + link.name+", d = "+link.d);
+					stack.push(link);
+					curPos.push(i);
+					pushedNew = true;
+					System.out.println("Edge ("+v.name+","+link.name+") 是：树边");
+					break; // 已发现新推入的结点，继续遍历该节点
+				}else if (link.color==Color.gray) {//NOTE：自循环的边如x出去的边指向x自己，也视为后向边
+					System.out.println("Edge ("+v.name+","+link.name+") 是：后向边");
+				}else if (link.color==Color.black) {
+					if(v.d<link.d){
+						System.out.println("Edge ("+v.name+","+link.name+") 是：前向边");
+					}else{
+						System.out.println("Edge ("+v.name+","+link.name+") 是：横向边");
+					}
+				}else {
+					System.out.println("这里应该执行不到");
+				}
 			}
 			if (pushedNew == false) { // 如果没push新的，说明已处于回退涂黑阶段，涂黑并pop
 				time++;
