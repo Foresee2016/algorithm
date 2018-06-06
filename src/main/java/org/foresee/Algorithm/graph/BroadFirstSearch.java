@@ -9,6 +9,12 @@ import org.foresee.Algorithm.graph.AdjacencyGraph.Vertex;
 
 public class BroadFirstSearch {
 	public static final int INFINITE_DISTANCE=99999;
+	/**
+	 * 从源节点s出发进行广度优先的搜索
+	 * 可以计算出从s到所有可达节点之间的距离 。
+	 * 广度优先搜索过程中将创建一棵广度优先搜索树，通过parent属性，各叶子连进来.
+	 * 运行时间V+E
+	 */
 	public void broadFirstSearch(AdjacencyGraph graph, Vertex s) {
 		for (Vertex u : graph.vertexs) {
 			u.color=Color.white;
