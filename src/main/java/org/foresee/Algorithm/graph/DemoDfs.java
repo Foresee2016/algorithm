@@ -18,6 +18,7 @@ public class DemoDfs {
 		graph.addVertex(y, x);
 		graph.addVertex(z, z);
 		DeepFirstSearch dfs=new DeepFirstSearch();
-		dfs.deepFirstSearch2(graph);
+		dfs.deepFirstSearch(graph);
+//		dfs.deepFirstSearch2(graph);
 	}
 }

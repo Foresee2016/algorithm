@@ -38,9 +38,35 @@ public class DeepFirstSearch {
 		time++;
 		u.d = time;
 		u.color = Color.gray;
+		System.out.println("涂灰" + u.name + ", d = " + u.d);
 		LinkedList<Edge> edges = u.adjacents;
 		for (Edge edge : edges) {
 			Vertex v = edge.link;
+			if (!edge.visited) {
+				edge.visited = true;
+				switch (v.color) {
+				case white:
+					edge.edgeType=EdgeType.TreeEdge;
+					System.out.println("Edge (" + u.name + "," + v.name + ") 是：树边");
+					break;
+				case gray:
+					edge.edgeType=EdgeType.BackwardEdge;
+					System.out.println("Edge (" + u.name + "," + v.name + ") 是：后向边");
+					break;
+				case black:
+					if (u.d < v.d) {
+						edge.edgeType=EdgeType.ForwardEdge;
+						System.out.println("Edge (" + u.name + "," + v.name + ") 是：前向边");
+					} else {
+						edge.edgeType=EdgeType.LateralEdge;
+						System.out.println("Edge (" + u.name + "," + v.name + ") 是：横向边");
+					}
+					break;
+				default:
+					System.out.println("这里应该执行不到" + v.color.name());
+					break;
+				}
+			}
 			if (v.color == Color.white) {
 				v.parent = u;
 				deepFirstSearchVisit(graph, v);
@@ -49,6 +75,7 @@ public class DeepFirstSearch {
 		u.color = Color.black;
 		time++;
 		u.f = time;
+		System.out.println("涂黑" + u.name + ", f = " + u.f);
 	}
 
 	/**
