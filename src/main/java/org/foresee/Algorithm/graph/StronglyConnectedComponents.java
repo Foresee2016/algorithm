@@ -48,6 +48,9 @@ public class StronglyConnectedComponents {
 		}
 	}
 	int time=0;
+	/**
+	 * 重写DFS，每次开新的Vertex时，将它当做树根保存到树List中，在深度优先搜索过程中，为该根添加child 
+	 */
 	protected ArrayList<DeepFirstNode> dfsTree(AdjacencyGraph graph) {
 		for (Vertex u : graph.vertexs) {
 			u.color = Color.white;
@@ -64,6 +67,9 @@ public class StronglyConnectedComponents {
 		}
 		return roots;
 	}
+	/**
+	 * 在深度优先搜索u的过程中，将u的子Vertex，添加到root下面 
+	 */
 	protected void deepFirstSearchVisit(AdjacencyGraph graph, Vertex u, DeepFirstNode root) {
 		time++;
 		u.d = time;
@@ -100,8 +106,8 @@ public class StronglyConnectedComponents {
 			if (v.color == Color.white) {
 				v.parent = u;
 				DeepFirstNode child=new DeepFirstNode(v);
-				root.childs.add(child);
-				deepFirstSearchVisit(graph, v, child);
+				root.childs.add(child); // v是u的子节点，加到childs里
+				deepFirstSearchVisit(graph, v, child); // 再搜索当前v的child并挂在v下
 			}
 		}
 		u.color = Color.black;
