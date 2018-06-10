@@ -5,6 +5,7 @@ import java.util.Queue;
 
 import org.foresee.Algorithm.graph.AdjacencyGraph.Color;
 import org.foresee.Algorithm.graph.AdjacencyGraph.Edge;
+import org.foresee.Algorithm.graph.AdjacencyGraph.EdgeType;
 import org.foresee.Algorithm.graph.AdjacencyGraph.Vertex;
 
 public class BroadFirstSearch {
@@ -35,6 +36,21 @@ public class BroadFirstSearch {
 			// 考察该节点的所有邻接节点，如果是白色的，则它还没被发现，涂灰色表示已发现，设置距离和父节点，加入队列末尾
 			for (Edge e : u.adjacents) {
 				Vertex v=e.link;
+				if(!e.visited){ // 广度优先搜索中边的分类，NOTE：不存在前向边
+					e.visited=true;
+					switch (v.color) { 
+					case white:
+						e.edgeType=EdgeType.TreeEdge;
+						break;
+					case gray:
+						e.edgeType=EdgeType.LateralEdge;
+						break;
+					case black:
+						e.edgeType=EdgeType.BackwardEdge;
+					default:
+						break;
+					}
+				}
 				if(v.color==Color.white){
 					v.color=Color.gray;
 					v.d=u.d+1;
