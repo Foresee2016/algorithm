@@ -109,24 +109,4 @@ public class StronglyConnectedComponents {
 		u.f = time;
 		System.out.println("涂黑" + u.name + ", f = " + u.f);
 	}
-
-	public static class DeepFirstNode{
-		public Vertex v;
-		public LinkedList<DeepFirstNode> childs;
-		public DeepFirstNode(Vertex v) {
-			this.v=v;
-			childs=new LinkedList<>();
-		}
-		
-		public static void outputRoot(DeepFirstNode root) {
-			System.out.print(root.v.name+" child: ");
-			for (DeepFirstNode child : root.childs) {
-				System.out.print(child.v.name+",");
-			}
-			System.out.println();
-			for (DeepFirstNode child : root.childs) {
-				outputRoot(child);
-			}
-		}
-	}
 }
