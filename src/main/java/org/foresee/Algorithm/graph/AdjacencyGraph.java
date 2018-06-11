@@ -31,7 +31,8 @@ public class AdjacencyGraph {
 		public Vertex parent; // 图搜索时指向前驱结点
 		public int f; // 深度优先遍历时存涂黑色时间戳
 		public double cost; // 顶点权值
-
+		public boolean isJunction; // 思考题22-2使用，结点是否为衔接点
+		public int low; // 思考题22-2使用
 		public Vertex(String name) {
 			this.name = name;
 			adjacents = new LinkedList<>();
