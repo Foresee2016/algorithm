@@ -18,7 +18,7 @@ public class AdjacencyGraph {
 	 */
 	public void addVertex(Vertex vertex, Vertex... linkTo) {
 		for (Vertex link : linkTo) {
-			vertex.adjacents.add(new Edge(link));
+			vertex.adjacents.add(new Edge(vertex, link));
 		}
 		vertexs.add(vertex);
 	}
@@ -33,6 +33,7 @@ public class AdjacencyGraph {
 		public double cost; // 顶点权值
 		public boolean isJunction; // 思考题22-2使用，结点是否为衔接点
 		public int low; // 思考题22-2使用
+
 		public Vertex(String name) {
 			this.name = name;
 			adjacents = new LinkedList<>();
@@ -44,13 +45,15 @@ public class AdjacencyGraph {
 	}
 
 	public static class Edge {
+		public Vertex src; // 后边需要排序和遍历边，还是加上源节点
 		public Vertex link; // 边被起点Vertex使用，这里只存终点就可以了
 		public double weight; // 权值
 		public EdgeType edgeType; // 边类型
 		boolean visited = false; // 边是否访问过
 
-		public Edge(Vertex end) {
+		public Edge(Vertex src, Vertex end) {
 			super();
+			this.src = src;
 			this.link = end;
 		}
 

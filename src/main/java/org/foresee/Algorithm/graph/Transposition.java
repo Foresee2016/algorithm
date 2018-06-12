@@ -20,7 +20,7 @@ public class Transposition {
 			for (Edge edge : edges) {
 				Vertex v=edge.link;
 				Vertex v2=nameMap.get(v.name);
-				v2.adjacents.add(new Edge(u2));
+				v2.adjacents.add(new Edge(v2, u2));
 			}
 		}
 		for (Vertex u2 : nameMap.values()) {
