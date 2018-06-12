@@ -2,6 +2,7 @@ package org.foresee.Algorithm.graph;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * 图数据结构，表示形式为：邻接表 结点Vertex类，边Edge类，都写在内部
@@ -16,11 +17,23 @@ public class AdjacencyGraph {
 	/**
 	 * 辅助方法，快速生成图结构，传入结点，和它直接相连的结点。不添加边的权值
 	 */
-	public void addVertex(Vertex vertex, Vertex... linkTo) {
+	public void addVertex(Vertex src, Vertex... linkTo) {
 		for (Vertex link : linkTo) {
-			vertex.adjacents.add(new Edge(vertex, link));
+			src.adjacents.add(new Edge(src, link));
 		}
-		vertexs.add(vertex);
+		vertexs.add(src);
+	}
+	/**
+	 * 辅助方法，传入源节点src和它连到的各结点，以及相应边的权重
+	 */
+	public boolean addVertexAndWeight(Vertex src, List<Vertex> linkTo, List<Double> weights) {
+		if(linkTo==null || weights==null || linkTo.size() != weights.size()){
+			return false;
+		}
+		for (int i = 0; i < linkTo.size(); i++) {
+			src.adjacents.add(new Edge(src, linkTo.get(i), weights.get(i)));
+		}
+		return true;
 	}
 
 	public static class Vertex {
@@ -33,7 +46,6 @@ public class AdjacencyGraph {
 		public double cost; // 顶点权值
 		public boolean isJunction; // 思考题22-2使用，结点是否为衔接点
 		public int low; // 思考题22-2使用
-
 		public Vertex(String name) {
 			this.name = name;
 			adjacents = new LinkedList<>();
@@ -51,10 +63,17 @@ public class AdjacencyGraph {
 		public EdgeType edgeType; // 边类型
 		boolean visited = false; // 边是否访问过
 
-		public Edge(Vertex src, Vertex end) {
+		public Edge(Vertex src, Vertex link) {
+			super();
+			this.src=src;
+			this.link = link;
+		}
+
+		public Edge(Vertex src, Vertex link, double weight) {
 			super();
 			this.src = src;
-			this.link = end;
+			this.link = link;
+			this.weight = weight;
 		}
 
 	}
