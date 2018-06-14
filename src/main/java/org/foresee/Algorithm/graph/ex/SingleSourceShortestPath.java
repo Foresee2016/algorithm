@@ -1,5 +1,6 @@
 package org.foresee.Algorithm.graph.ex;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 
 import org.foresee.Algorithm.graph.ex.ShortestPathGraph.Edge;
@@ -74,6 +75,7 @@ public class SingleSourceShortestPath {
 		}
 		return true;
 	}
+
 	// @formatter:off
 	/**
 	 * 有向无环图的单源最短路径问题，根据结点的拓扑排序次序对带权重的有向无环图G进行边的松弛操作，
@@ -97,5 +99,56 @@ public class SingleSourceShortestPath {
 			System.out.println(e.getMessage());
 			return false;
 		}
+	}
+
+	// @formatter:off
+	/**
+	 * 人名Dijkstra，所以使用了首字母大写命名该方法。
+	 * 要求所有边权重都是非负值。
+	 * 算法运行过程是维持关键信息是一组结点集合S，从源结点s到集合S中的每个结点最短路径已经被找到，
+	 * 重复从V-S中选择最短路径估计最小的u，对u出发的边进行松弛操作。
+	 * 使用最小优先级队列Q保存结点集合，关键值为v.d值
+	 * NOTE：程序里没有使用高性能的最小优先队列算法，所以当前程序性能较差。
+	 */
+	public boolean Dijkstra(ShortestPathGraph graph, Vertex s) {
+	// @formatter:on
+		for (Edge edge : graph.edges) {
+			if (edge.weight < 0) {
+				return false;
+			}
+		}
+		initializeSingleSource(graph, s);
+		HashSet<Vertex> S = new HashSet<>();
+		// 这里用LinkedList，PriorityQueue需要Comparator，但更新v时不能自动再排序。遍历取最小实现简单
+		LinkedList<Vertex> Q = new LinkedList<>(graph.vertexs);
+		while (!Q.isEmpty()) {
+			Vertex u = extractMin(Q);
+			S.add(u);
+			for (Edge edge : u.adjacents) {
+				relax(edge);
+			}
+		}
+		return true;
+	}
+
+	// @formatter:off
+	/**
+	 * 从队列中选择出路径估计最小的结点，LinkedList是Queue的一个实现。所以暂时使用最简单的实现，遍历取最小。
+	 * 书里写用最小优先队列性能较差，最小二叉堆较好，斐波那契堆最好。
+	 * 但维护复杂，每次对u的邻接节点更新v.d时都要更新队列，
+	 * 遍历需要O(V)时间，导致Dijkstra算法运行时间O(V * V + E)。
+	 * 使用二叉堆时，Dijkstra算法运行时间O(E * log(V))。
+	 * 使用斐波那契堆时，Dijkstra算法运行时间O(V*log(V) + E)。
+	 */
+	private Vertex extractMin(LinkedList<Vertex> Q) {
+	// @formatter:on
+		Vertex u = Q.peek();
+		for (Vertex v : Q) {
+			if (v.d < u.d) {
+				u = v;
+			}
+		}
+		Q.remove(u);
+		return u;
 	}
 }
