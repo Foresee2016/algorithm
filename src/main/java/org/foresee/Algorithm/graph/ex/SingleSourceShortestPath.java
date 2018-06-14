@@ -1,7 +1,10 @@
 package org.foresee.Algorithm.graph.ex;
 
+import java.util.LinkedList;
+
 import org.foresee.Algorithm.graph.ex.ShortestPathGraph.Edge;
 import org.foresee.Algorithm.graph.ex.ShortestPathGraph.Vertex;
+import org.foresee.Algorithm.graph.ex.TopologicalSort.HasCircleException;
 
 /**
  * 最短路径算法通常依赖最短路径的一个重要性质：两个结点之间的一条最短路径，包含着其他的最短路径。
@@ -70,5 +73,29 @@ public class SingleSourceShortestPath {
 			}
 		}
 		return true;
+	}
+	// @formatter:off
+	/**
+	 * 有向无环图的单源最短路径问题，根据结点的拓扑排序次序对带权重的有向无环图G进行边的松弛操作，
+	 * 可以在θ(V + E)时间内计算出从单个源节点到所有结点之间的最短路径。
+	 * 先对五环图进行拓扑排序，以便确定结点之间的线性次序。然后按照拓扑排序次序遍历一遍结点，对结点每条边松弛操作。 
+	 * NOTE：DAG是Direct Acyclic Graph的缩写。
+	 */
+	public boolean dagShortestPaths(ShortestPathGraph graph, Vertex s) { 
+	// @formatter:on
+		TopologicalSort topoSort = new TopologicalSort();
+		try {
+			LinkedList<Vertex> sorted = topoSort.topologicalSort(graph);
+			initializeSingleSource(graph, s); // 这里虽然改变了所有v.d值，但拓扑排序结果已经在sorted里了。
+			for (Vertex u : sorted) {
+				for (Edge e : u.adjacents) {
+					relax(e);
+				}
+			}
+			return true;
+		} catch (HasCircleException e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
 	}
 }
