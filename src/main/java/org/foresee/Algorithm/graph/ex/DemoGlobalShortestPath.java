@@ -24,5 +24,6 @@ public class DemoGlobalShortestPath {
 //		MatrixGraph.outputWeightMatrix(graph.weights);
 		GlobalShortestPath shortestPath=new GlobalShortestPath();
 		MatrixGraph.outputWeightMatrix(shortestPath.slowAllPairsShortestPaths(graph));
+		MatrixGraph.outputWeightMatrix(shortestPath.fasterAllPairsShortestPaths(graph));
 	}
 }
