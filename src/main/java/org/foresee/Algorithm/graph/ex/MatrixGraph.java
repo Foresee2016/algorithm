@@ -16,62 +16,81 @@ public class MatrixGraph {
 // @formatter:on
 	public static final int INFINITE = 1000;
 	Map<Vertex, Integer> vertexs; // 图中所有结点和它在矩阵中的位置
-	double[][] edges; // 图中边的权重
+	double[][] weights; // 图中边的权重
 	Vertex[][] pi; // 前驱结点矩阵PI
 	double[][] d; // 最短路径算法的表格输出
 
 	public MatrixGraph(int vertexCount) {
 		vertexs = new HashMap<>(vertexCount);
-		edges = new double[vertexCount][vertexCount];
+		weights = new double[vertexCount][vertexCount];
 		pi = new Vertex[vertexCount][vertexCount];
 		d = new double[vertexCount][vertexCount];
 		for (int i = 0; i < vertexCount; i++) {
 			for (int j = 0; j < vertexCount; j++) {
 				if (i == j) {
-					edges[i][j] = 0;
+					weights[i][j] = 0;
 					d[i][j] = 0;
 				} else {
-					edges[i][j] = INFINITE;
+					weights[i][j] = INFINITE;
 					d[i][j] = INFINITE;
 				}
 			}
 		}
 	}
+
+	public void addVertex(Vertex... vs) {
+		for (Vertex v : vs) {
+			int pos = vertexs.size();
+			vertexs.put(v, pos);
+		}
+	}
+
 	/**
 	 * 添加边，源节点和它连接的结点，以及边权重。
+	 * 
 	 * @throws RuntimeException：当结点数量超过初始化时的结点数量时。
 	 */
 	public void addEdge(Vertex src, Vertex link, double weight) {
 		int srcPos = findPosition(src), linkPos = findPosition(link);
-		edges[srcPos][linkPos] = weight;
+		weights[srcPos][linkPos] = weight;
 	}
-	
+
 	public void printAllPairsShortestPath(Vertex i, Vertex j) {
-		if(i==j){
+		if (i == j) {
 			System.out.print(i.name);
-		}else if(pi[vertexs.get(i)][vertexs.get(j)]==null){
-			System.out.print("No path From "+i.name+" to "+j.name);
-		}else {
+		} else if (pi[vertexs.get(i)][vertexs.get(j)] == null) {
+			System.out.print("No path From " + i.name + " to " + j.name);
+		} else {
 			printAllPairsShortestPath(i, pi[vertexs.get(i)][vertexs.get(j)]);
 			System.out.print(j.name);
 		}
 	}
+
 	/**
 	 * 找到结点v在数组中的位置，如果v是新添加的，则顺序加入Map下一个位置，返回该位置。
 	 * 
-	 * @throws RuntimeException：当要添加新的，但当前数量已经等于初始化时的结点数量时，不能再添加。
+	 * @throws RuntimeException：找不到指定的结点时抛出异常，使用时应先添加结点再添加边。
 	 */
 	protected int findPosition(Vertex v) {
 		if (vertexs.keySet().contains(v)) {
 			return vertexs.get(v);
 		} else {
-			if (vertexs.size() == edges.length) {
-				throw new RuntimeException("结点数量超过了初始化时的数量，不能再添加");
-			}
-			int pos = vertexs.size();
-			vertexs.put(v, pos);
-			return pos;
+			throw new RuntimeException("未找到结点" + v.name + ", 可能未添加。");
 		}
+	}
+
+	/**
+	 * 辅助方法，输出权重矩阵W，用制表符格式化成行列（对于过长的数值将错位）
+	 */
+	public static void outputWeightMatrix(double[][] W) {
+		System.out.println("----- -----");
+		for (int i = 0; i < W.length; i++) {
+			for (int j = 0; j < W[i].length; j++) {
+				System.out.print(W[i][j] + "\t");
+			}
+			System.out.println();
+		}
+		System.out.println("----- -----");
 	}
 
 	public static class Vertex {
