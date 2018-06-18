@@ -69,28 +69,30 @@ public class GlobalShortestPath {
 		}
 		return C;
 	}
+
 	/**
 	 * 练习25.1-6，从已经计算出的最短路径权重矩阵L计算出前驱矩阵Pi，在O(n*n*n)时间内。
 	 * 思路是判断某个位置的值是否是另一位置和权重矩阵的和，是的话，说明是计算来的，该位置的父节点是另一位置
 	 */
 	public void generatePi(double[][] L, double[][] W, int[][] Pi) {
-		int n=L.length;
+		int n = L.length;
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < n; j++) {
-				Pi[i][j]=MatrixGraph.NIL; // 初始化值
-				if(i==j){ // 自己跟自己无所谓路径一说
+				Pi[i][j] = MatrixGraph.NIL; // 初始化值
+				if (i == j) { // 自己跟自己无所谓路径一说
 					continue;
 				}
 				// 遍历该行所有，看看是从哪里过来的，直接过来的情况也包含在内了，
 				// 比如0到4权重是-4且它是最短路径，那么i=0，j=4，k=0时更新的4的父结点是0
 				for (int k = 0; k < n; k++) {
-					if(L[i][j] == L[i][k] + W[k][j] && k!=j){ // W对角线上都是0，成立但无意义
-						Pi[i][j]=k;
+					if (L[i][j] == L[i][k] + W[k][j] && k != j) { // W对角线上都是0，成立但无意义
+						Pi[i][j] = k;
 					}
 				}
 			}
 		}
 	}
+
 	// @formatter:off
 	/**
 	 * Floyd-Warshall算法，自底向上递增次序计算最短路径权重Dn的值。
@@ -103,17 +105,76 @@ public class GlobalShortestPath {
 	 */
 	public double[][] FloydWarshall(double[][] W) {
 	// @formatter:on
-		int n=W.length;
-		double[][] Dk_1=W;
+		int n = W.length;
+		double[][] Dk_1 = W;
 		for (int k = 0; k < n; k++) {
-			double[][] Dk=new double[n][n];
+			double[][] Dk = new double[n][n];
 			for (int i = 0; i < n; i++) {
 				for (int j = 0; j < n; j++) {
-					Dk[i][j]=Double.min(Dk_1[i][j], Dk_1[i][k] + Dk_1[k][j]);
+					Dk[i][j] = Double.min(Dk_1[i][j], Dk_1[i][k] + Dk_1[k][j]);
 				}
 			}
-			Dk_1=Dk;
+			Dk_1 = Dk;
 		}
 		return Dk_1;
+	}
+
+	/**
+	 * 在计算最短路径权重矩阵的同时，计算前驱矩阵Pi。
+	 */
+	public double[][] FloydWarshallWithPi(double[][] W, int[][] Pi) {
+		// 初始化Pi，在k=0时，没有中间结点，W上有路径，则有父结点，W为无穷的位置，没有父结点
+		int n = W.length;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (i == j || W[i][j] == MatrixGraph.INFINITE) {
+					Pi[i][j] = MatrixGraph.NIL;
+				} else {
+					Pi[i][j] = i;
+				}
+			}
+		}
+		double[][] Dk_1 = W;
+		int[][] Pik_1 = Pi;
+		for (int k = 0; k < n; k++) {
+			double[][] Dk = new double[n][n];
+			int[][] Pik = new int[n][n];
+			for (int i = 0; i < n; i++) {
+				for (int j = 0; j < n; j++) {
+					if(i==j){
+						Dk[i][j]=0;
+						Pik[i][j]=MatrixGraph.NIL;
+						continue;
+					}
+					Dk[i][j] = Double.min(Dk_1[i][j], Dk_1[i][k] + Dk_1[k][j]);
+					Pik[i][j] = MatrixGraph.NIL;
+					// 如果子集中新增了k但最短路径没有因此改变，那么父结点仍保持原来的
+					if (Dk_1[i][j] <= plus(Dk_1[i][k], Dk_1[k][j])) {
+						Pik[i][j] = Pik_1[i][j];
+					} else {
+						// 如果新的路径比没有k时的路径短，会更新最短路径权重，也要更新父结点
+						// 新父结点的位置在新增的第k行，要到的结点时j所以在第j列。
+						Pik[i][j] = Pik_1[k][j];
+					}
+				}
+			}
+			Dk_1 = Dk;
+			Pik_1 = Pik;
+		}
+		for (int i = 0; i < n; i++) { // 按引用传递的，这里把值赋回去
+			for (int j = 0; j < n; j++) {
+				Pi[i][j] = Pik_1[i][j];
+			}
+		}
+		return Dk_1;
+	}
+	/**
+	 * 添加无穷值的计算法则，防止有负权重时无穷加负值小于无穷的情况
+	 */
+	private double plus(double Dik, double Dkj) {
+		if(Dik == MatrixGraph.INFINITE || Dkj == MatrixGraph.INFINITE){
+			return MatrixGraph.INFINITE;
+		}
+		return Dik+Dkj;
 	}
 }

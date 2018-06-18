@@ -27,7 +27,9 @@ public class DemoGlobalShortestPath {
 		MatrixGraph.outputWeightMatrix(L);
 		MatrixGraph.outputWeightMatrix(shortestPath.fasterAllPairsShortestPaths(graph));
 		MatrixGraph.outputWeightMatrix(shortestPath.FloydWarshall(graph.weights));
-		
+		shortestPath.FloydWarshallWithPi(graph.weights, graph.pi);
+		graph.outputPi();
+		System.out.println("----------------");
 		shortestPath.generatePi(L, graph.weights, graph.pi);
 		graph.outputPi();
 		System.out.print("Path from "+a.name+" to "+b.name+"：");
