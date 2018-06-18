@@ -21,9 +21,20 @@ public class DemoGlobalShortestPath {
 		graph.addEdge(d, c, -5);
 		graph.addEdge(e, d, 6);
 		
-//		MatrixGraph.outputWeightMatrix(graph.weights);
 		GlobalShortestPath shortestPath=new GlobalShortestPath();
-		MatrixGraph.outputWeightMatrix(shortestPath.slowAllPairsShortestPaths(graph));
+		double[][] L=shortestPath.slowAllPairsShortestPaths(graph);
+		MatrixGraph.outputWeightMatrix(graph.weights);
+		MatrixGraph.outputWeightMatrix(L);
 		MatrixGraph.outputWeightMatrix(shortestPath.fasterAllPairsShortestPaths(graph));
+		MatrixGraph.outputWeightMatrix(shortestPath.FloydWarshall(graph.weights));
+		
+		shortestPath.generatePi(L, graph.weights, graph.pi);
+		graph.outputPi();
+		System.out.print("Path from "+a.name+" to "+b.name+"：");
+		graph.printAllPairsShortestPath(a, b); // 用结点，输出也用结点名标识
+		System.out.println();
+		System.out.print("Path from 0 to 1: ");
+		graph.printAllPairsShortestPath(0, 1); //可以用结点的序号值，输出也通过序号值
+		System.out.println();
 	}
 }
