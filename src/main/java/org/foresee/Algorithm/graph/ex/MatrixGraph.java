@@ -15,15 +15,18 @@ import java.util.Map;
 public class MatrixGraph {
 // @formatter:on
 	public static final int INFINITE = 1000;
+	public static final int NIL = -1;
 	Map<Vertex, Integer> vertexs; // 图中所有结点和它在矩阵中的位置
+	Vertex[] vertexsArr; // 结点数组，通过位置可查到结点
 	double[][] weights; // 图中边的权重
-	Vertex[][] pi; // 前驱结点矩阵PI
+	int[][] pi; // 前驱结点矩阵PI，int值代表该节点在结点数组vertexsArr中的位置
 	double[][] d; // 最短路径算法的表格输出
 
 	public MatrixGraph(int vertexCount) {
 		vertexs = new HashMap<>(vertexCount);
+		vertexsArr = new Vertex[vertexCount];
 		weights = new double[vertexCount][vertexCount];
-		pi = new Vertex[vertexCount][vertexCount];
+		pi = new int[vertexCount][vertexCount];
 		d = new double[vertexCount][vertexCount];
 		for (int i = 0; i < vertexCount; i++) {
 			for (int j = 0; j < vertexCount; j++) {
@@ -34,6 +37,7 @@ public class MatrixGraph {
 					weights[i][j] = INFINITE;
 					d[i][j] = INFINITE;
 				}
+				pi[i][j] = NIL;
 			}
 		}
 	}
@@ -42,6 +46,7 @@ public class MatrixGraph {
 		for (Vertex v : vs) {
 			int pos = vertexs.size();
 			vertexs.put(v, pos);
+			vertexsArr[pos] = v;
 		}
 	}
 
@@ -55,14 +60,44 @@ public class MatrixGraph {
 		weights[srcPos][linkPos] = weight;
 	}
 
-	public void printAllPairsShortestPath(Vertex i, Vertex j) {
+	public void outputPi() {
+		System.out.println("----- Pi -----");
+		for (int i = 0; i < pi.length; i++) {
+			for (int j = 0; j < pi.length; j++) {
+				System.out.print(pi[i][j] + "\t");
+			}
+			System.out.println();
+		}
+		System.out.println("----- -----");
+	}
+
+	/**
+	 * 输出结点u到v的最短路径，以结点名字输出
+	 */
+	public void printAllPairsShortestPath(Vertex u, Vertex v) {
+		int i = findPosition(u);
+		int j = findPosition(v);
 		if (i == j) {
-			System.out.print(i.name);
-		} else if (pi[vertexs.get(i)][vertexs.get(j)] == null) {
-			System.out.print("No path From " + i.name + " to " + j.name);
+			System.out.print(vertexsArr[i].name);
+		} else if (pi[i][j] == NIL) {
+			System.out.print("No path From " + vertexsArr[i].name + " to " + vertexsArr[j].name);
 		} else {
-			printAllPairsShortestPath(i, pi[vertexs.get(i)][vertexs.get(j)]);
-			System.out.print(j.name);
+			printAllPairsShortestPath(vertexsArr[i], vertexsArr[pi[i][j]]);
+			System.out.print(" -> " + vertexsArr[j].name);
+		}
+	}
+
+	/**
+	 * 输出结点u到v的最短路径，以结点在vertexs中的序号输出
+	 */
+	public void printAllPairsShortestPath(int i, int j) {
+		if (i == j) {
+			System.out.print(i);
+		} else if (pi[i][j] == NIL) {
+			System.out.print("No path From " + i + " to " + j);
+		} else {
+			printAllPairsShortestPath(i, pi[i][j]);
+			System.out.print(" -> " + j);
 		}
 	}
 
