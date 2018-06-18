@@ -2,6 +2,8 @@ package org.foresee.Algorithm.graph.ex;
 
 /**
  * 所有结点之间的最短路径问题，如计算所有城市之间交通道路距离时。
+ * NOTE：有向图的传递闭包，用类似FloydWarshall的方式计算有向图结点对i和j是否有路径存在。权重都为1，与或操作，节省空间。
+ * 这里没有实现“传递闭包”。
  */
 public class GlobalShortestPath {
 	/**
