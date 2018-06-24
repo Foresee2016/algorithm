@@ -108,4 +108,10 @@ public class MaxStream {
 			}
 		}
 	}
+	/**
+	 * TODO: 26.4推送-重贴标签算法，运行时间O(V*V*E)，26.5调忧到O(V*V*V)，之后有时间再写。
+	 */
+	public void GenericPushRelabel() {
+		
+	}
 }
