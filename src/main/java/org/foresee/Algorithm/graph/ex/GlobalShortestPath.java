@@ -179,4 +179,26 @@ public class GlobalShortestPath {
 		}
 		return Dik+Dkj;
 	}
+	/**
+	 * 这个算法我没看懂是为什么，照着伪代码的话，要改一些结构，暂时跳过。
+	 */
+	@Deprecated
+	public double[][] Johnson(MatrixGraph graph) {
+		// 如果MatrixGraph用List存的话，感觉可以直接加进去而不新建图
+//		MatrixGraph graph2=new MatrixGraph(graph.vertexs.size()+1);
+//		Vertex s=new Vertex("s");
+//		graph2.addVertex(graph.vertexsArr);
+//		graph2.addVertex(s);
+//		for (int i = 0; i < graph.weights.length; i++) {
+//			for (int j = 0; j < graph.weights[0].length; j++) {
+//				graph2.weights[i][j]=graph.weights[i][j];
+//			}
+//		}
+//		for (Vertex v : graph.vertexsArr) {
+//			graph2.addEdge(s, v, 0);
+//		}
+//		SingleSourceShortestPath shortestPath=new SingleSourceShortestPath();
+//		shortestPath.BellmanFord(graph, s)
+		return null;
+	}
 }
