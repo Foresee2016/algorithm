@@ -4,7 +4,7 @@ import org.foresee.Algorithm.GenerateNumber;
 
 public class BubbleSort {
 public static void main(String[] args) {
-	String filename="E:/JavaSpace/Algorithm/sort.data";
+	String filename="C:/Code/JavaSpace/Algorithm/sort.data";
 	int[] data2=GenerateNumber.getFileData(filename);
 	BubbleSort.bubbleSort(data2);
 	for(int i=0; i<data2.length; i++){
