@@ -18,6 +18,10 @@ public class PriorityQueue {
         System.out.println(priorityQueue.heapExtractMax());
         priorityQueue.heapIncreaseKey(5, 55);
         System.out.println(priorityQueue.heapExtractMax());
+
+        priorityQueue.heapDelete(1); // 删掉了10
+        System.out.println(priorityQueue.heapExtractMax());
+        System.out.println(priorityQueue.heapExtractMax());
     }
 
     private int heapSize=0;
@@ -49,7 +53,12 @@ public class PriorityQueue {
         maxHeapify(0);
         return max;
     }
-
+    public void heapDelete(int i){
+        //删除，直接赋最小，然后maxHeapify()不行，会让树不是左满的
+        //这里先赋最大，转到最上面，然后extract出去，这时最小的换到上面，再逐步下降，还是左满的
+        heapIncreaseKey(i, Integer.MAX_VALUE);
+        heapExtractMax();
+    }
     public void heapIncreaseKey(int i, int key) {
         if (key < elems.get(i)) {
             throw new RuntimeException("key is lower, cannot increase");
